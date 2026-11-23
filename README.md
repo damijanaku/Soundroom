@@ -1,6 +1,14 @@
 # Soundroom
 
-Soundroom je spletna aplikacija za poslušanje osebne glasbene knjižnice. Uporabnikom omogoča iskanje in pretakanje skladb, sestavljanje seznamov predvajanja ter odkrivanje podobne glasbe, skrbnikom pa uvoz datotek in upravljanje uporabnikov ter nastavitev. Odjemalec je odzivna spletna aplikacija, ki jo je v telefonu z Androidom mogoče namestiti kot progresivno spletno aplikacijo (PWA).
+Soundroom je spletna aplikacija za poslušanje osebne glasbene knjižnice. Uporabnikom omogoča iskanje in pretakanje skladb, sestavljanje seznamov predvajanja ter odkrivanje podobne glasbe, skrbnikom pa uvoz datotek in upravljanje uporabnikov ter nastavitev. Odjemalec je odzivna spletna aplikacija.
+
+[![Stanje cevovoda](https://github.com/damijanaku/Soundroom/actions/workflows/tests.yml/badge.svg)](https://github.com/damijanaku/Soundroom/actions/workflows/tests.yml)
+
+**Nameščena aplikacija:** [soundroom-six.vercel.app](https://soundroom-six.vercel.app)
+
+### Faze cevovoda CI/CD
+
+Ob vsaki spremembi v veji `main` in pri zahtevah za združitev cevovod preveri zaledno kodo z Ruffom, preveri slog odjemalca z ESLintom, zgradi odjemalca in sliko vsebnika zaledja ter zažene teste odjemalca in zaledja. Po uspešnem preverjanju spremembe v veji `main` namesti odjemalca na Vercel, objavi sliko zaledja v GitHub Container Registry in sproži namestitev zaledja na Render.
 
 ## Stanje implementacije
 
