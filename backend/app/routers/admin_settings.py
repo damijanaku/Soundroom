@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
@@ -47,7 +47,7 @@ def update_settings(
     settings.llm_auto_approve = payload.llm_auto_approve
     settings.max_track_minutes = payload.max_track_minutes
     settings.updated_by_user_id = ctx.user.id
-    settings.updated_at = datetime.now(timezone.utc)
+    settings.updated_at = datetime.now(UTC)
     db.add(settings)
     db.commit()
     db.refresh(settings)

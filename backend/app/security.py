@@ -37,7 +37,7 @@ def hash_session_token(token: str) -> str:
 def derive_csrf_token(session_token: str, secret: str) -> str:
     return hmac.new(
         secret.encode("utf-8"),
-        f"csrf:{session_token}".encode("utf-8"),
+        f"csrf:{session_token}".encode(),
         hashlib.sha256,
     ).hexdigest()
 

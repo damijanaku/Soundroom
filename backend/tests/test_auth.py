@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from fastapi.testclient import TestClient
 from sqlalchemy import select
@@ -6,7 +6,7 @@ from sqlalchemy import select
 from app.models import User, UserRole, UserSession
 from app.security import hash_password, hash_session_token
 
-from .utils import ADMIN_EMAIL, ADMIN_PASSWORD, auth_headers, login
+from .utils import ADMIN_EMAIL, auth_headers, login
 
 
 def test_login_success_sets_cookie_and_returns_csrf(client: TestClient):
@@ -91,7 +91,7 @@ def test_expired_session_is_rejected(client: TestClient, db_session):
         select(UserSession).where(UserSession.token_hash == hash_session_token(token))
     )
     assert session is not None
-    session.expires_at = datetime.now(timezone.utc) - timedelta(minutes=1)
+    session.expires_at = datetime.now(UTC) - timedelta(minutes=1)
     db_session.add(session)
     db_session.commit()
 
@@ -107,7 +107,7 @@ def test_revoked_session_is_rejected(client: TestClient, db_session):
         select(UserSession).where(UserSession.token_hash == hash_session_token(token))
     )
     assert session is not None
-    session.revoked_at = datetime.now(timezone.utc)
+    session.revoked_at = datetime.now(UTC)
     db_session.add(session)
     db_session.commit()
 

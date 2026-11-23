@@ -1,6 +1,6 @@
+import re
 from dataclasses import dataclass
 from pathlib import Path
-import re
 
 from mutagen import MutagenError
 from mutagen.mp3 import MP3

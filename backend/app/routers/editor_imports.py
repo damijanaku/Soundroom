@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Query, status
@@ -97,7 +97,7 @@ def reject_import_job(
     job = _get_review_job(db, job_id)
     job.status = RipJobStatus.cancelled
     job.error_message = "Rejected by editor."
-    job.finished_at = datetime.now(timezone.utc)
+    job.finished_at = datetime.now(UTC)
     db.add(job)
     db.commit()
     db.refresh(job)

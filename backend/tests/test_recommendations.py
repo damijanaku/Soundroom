@@ -1,4 +1,4 @@
-from uuid import UUID, uuid4
+from uuid import uuid4
 
 import httpx
 import pytest
@@ -15,7 +15,6 @@ from app.recommendations import (
     SimilarTrack,
     build_recommendations,
     clean_seed_metadata,
-    lastfm_seed_metadata,
     match_local_track,
     song_identity,
 )

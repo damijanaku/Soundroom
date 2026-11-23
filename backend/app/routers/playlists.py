@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import UUID, uuid4
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -164,7 +164,7 @@ def rename_playlist(
 ) -> PlaylistDetail:
     playlist = _load_owned(db, playlist_id, ctx.user.id)
     playlist.name = payload.name
-    playlist.updated_at = datetime.now(timezone.utc)
+    playlist.updated_at = datetime.now(UTC)
     db.commit()
     return _detail_after_commit(db, playlist.id, ctx.user.id)
 
@@ -215,7 +215,7 @@ def add_playlist_item(
         track_id=track.id,
         position=next_position,
     )
-    playlist.updated_at = datetime.now(timezone.utc)
+    playlist.updated_at = datetime.now(UTC)
     db.add(item)
     try:
         db.commit()
@@ -253,7 +253,7 @@ def remove_playlist_item(
     db.flush()
     for index, entry in enumerate(remaining):
         entry.position = index
-    playlist.updated_at = datetime.now(timezone.utc)
+    playlist.updated_at = datetime.now(UTC)
     db.commit()
     return _detail_after_commit(db, playlist.id, ctx.user.id)
 
@@ -280,6 +280,6 @@ def reorder_playlist_items(
     db.flush()
     for index, item_id in enumerate(payload.item_ids):
         items_by_id[item_id].position = index
-    playlist.updated_at = datetime.now(timezone.utc)
+    playlist.updated_at = datetime.now(UTC)
     db.commit()
     return _detail_after_commit(db, playlist.id, ctx.user.id)

@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from sqlalchemy import select
@@ -43,7 +43,7 @@ def login(
         )
 
     session_token = generate_session_token()
-    expires_at = datetime.now(timezone.utc) + timedelta(
+    expires_at = datetime.now(UTC) + timedelta(
         hours=settings.session_ttl_hours
     )
     session = UserSession(
@@ -84,7 +84,7 @@ def logout(
     db: Session = Depends(get_db),
     settings: Settings = Depends(get_settings),
 ) -> Response:
-    ctx.session.revoked_at = datetime.now(timezone.utc)
+    ctx.session.revoked_at = datetime.now(UTC)
     db.add(ctx.session)
     db.commit()
 

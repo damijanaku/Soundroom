@@ -7,7 +7,6 @@ from enum import StrEnum
 from sqlalchemy import (
     Boolean,
     DateTime,
-    Enum as SAEnum,
     ForeignKey,
     Index,
     Integer,
@@ -15,6 +14,9 @@ from sqlalchemy import (
     UniqueConstraint,
     Uuid,
     func,
+)
+from sqlalchemy import (
+    Enum as SAEnum,
 )
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 

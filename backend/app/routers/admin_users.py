@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -92,7 +92,7 @@ def update_user(
                     UserSession.user_id == user.id,
                     UserSession.revoked_at.is_(None),
                 )
-                .values(revoked_at=datetime.now(timezone.utc))
+                .values(revoked_at=datetime.now(UTC))
             )
 
     db.add(user)

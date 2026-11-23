@@ -9,7 +9,7 @@ import subprocess
 import tempfile
 import time
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 from uuid import uuid4
@@ -378,7 +378,7 @@ def _fail_job(db: Session, job_id, message: str) -> None:
         return
     job.status = RipJobStatus.failed
     job.error_message = message[:1000]
-    job.finished_at = datetime.now(timezone.utc)
+    job.finished_at = datetime.now(UTC)
     db.add(job)
     db.commit()
 
@@ -422,7 +422,7 @@ def _publish_download(
                 job.track_id = existing.id
                 job.status = RipJobStatus.completed
                 job.error_message = None
-                job.finished_at = datetime.now(timezone.utc)
+                job.finished_at = datetime.now(UTC)
                 db.add(job)
                 db.commit()
                 final_path.unlink(missing_ok=True)
@@ -464,7 +464,7 @@ def _publish_download(
             job.track_id = track.id
             job.status = RipJobStatus.completed
             job.error_message = None
-            job.finished_at = datetime.now(timezone.utc)
+            job.finished_at = datetime.now(UTC)
             db.add(job)
             db.commit()
         except Exception:
@@ -578,7 +578,7 @@ def claim_next_job(db: Session) -> RipJob | None:
     if job is None:
         return None
 
-    job.started_at = datetime.now(timezone.utc)
+    job.started_at = datetime.now(UTC)
     if job.candidate_url:
         job.status = RipJobStatus.downloading
     else:
