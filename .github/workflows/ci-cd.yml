@@ -66,14 +66,12 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          RENDER_BACKEND_URL: ${{ vars.RENDER_BACKEND_URL }}
       - run: vercel build --prod --token="$VERCEL_TOKEN"
         if: github.event_name == 'push'
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          RENDER_BACKEND_URL: ${{ vars.RENDER_BACKEND_URL }}
       - name: Build backend container image
         uses: docker/build-push-action@v6
         with:
@@ -162,7 +160,6 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          RENDER_BACKEND_URL: ${{ vars.RENDER_BACKEND_URL }}
       - name: Log in to GitHub Container Registry
         env:
           GHCR_TOKEN: ${{ github.token }}
