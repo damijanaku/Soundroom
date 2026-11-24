@@ -2,7 +2,7 @@
 
 Soundroom je spletna aplikacija za poslušanje osebne glasbene knjižnice. Uporabnikom omogoča iskanje in pretakanje skladb, sestavljanje seznamov predvajanja ter odkrivanje podobne glasbe, skrbnikom pa uvoz datotek in upravljanje uporabnikov ter nastavitev. Odjemalec je odzivna spletna aplikacija.
 
-[![Stanje cevovoda](https://github.com/damijanaku/Soundroom/actions/workflows/tests.yml/badge.svg)](https://github.com/damijanaku/Soundroom/actions/workflows/tests.yml)
+[![Stanje cevovoda](https://github.com/damijanaku/Soundroom/actions/workflows/tests.yml/badge.svg)](https://github.com/damijanaku/Soundroom/actions/workflows/ci-cd.yml)
 
 **Nameščena aplikacija:** [soundroom-six.vercel.app](https://soundroom-six.vercel.app)
 
