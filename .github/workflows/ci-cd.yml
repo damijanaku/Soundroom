@@ -58,20 +58,6 @@ jobs:
         working-directory: frontend
       - run: npm run build
         working-directory: frontend
-      - run: npm install --global vercel
-        if: github.event_name == 'push'
-      - run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
-        if: github.event_name == 'push'
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-      - run: vercel build --prod --token="$VERCEL_TOKEN"
-        if: github.event_name == 'push'
-        env:
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
       - name: Build backend container image
         uses: docker/build-push-action@v6
         with:
@@ -89,9 +75,7 @@ jobs:
           name: soundroom-build
           path: |
             frontend/dist/
-            .vercel/output/
             backend-image.tar
-          include-hidden-files: true
       - uses: actions/upload-artifact@v4
         if: github.event_name == 'pull_request'
         with:
@@ -99,6 +83,38 @@ jobs:
           path: |
             frontend/dist/
             backend-image.tar
+
+  vercel-build:
+    name: Prepare Vercel production artifact
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [build]
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: soundroom-build
+          path: .
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm install --global vercel
+      - run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      - run: vercel build --prod --token="$VERCEL_TOKEN"
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vercel-prebuilt
+          path: .vercel/output/
+          include-hidden-files: true
 
   test:
     runs-on: ubuntu-latest
@@ -134,13 +150,17 @@ jobs:
 
   deploy:
     name: Deploy Vercel frontend and Render backend
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.lint.result == 'success' && needs.frontend-lint.result == 'success' && needs.build.result == 'success' && needs.test.result == 'success'
-    needs: [lint, frontend-lint, build, test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && needs.lint.result == 'success' && needs.frontend-lint.result == 'success' && needs.build.result == 'success' && needs.test.result == 'success' && needs.vercel-build.result == 'success'
+    needs: [lint, frontend-lint, build, test, vercel-build]
     runs-on: ubuntu-latest
     environment:
       name: production
       url: ${{ vars.VERCEL_SITE_URL }}
     steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: vercel-prebuilt
+          path: .
       - uses: actions/download-artifact@v4
         with:
           name: soundroom-build
